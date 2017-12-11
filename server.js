@@ -10,43 +10,43 @@ async function HttpCallbackHandler(message, response) {
 
     // The part below starts the Yoctopuce library in HTTP Callback mode and interacts
     // with modules connected on the VirtualHub or YoctoHub that made the HTTP request
-    let errmsg = new YErrorMsg();
-    let yctx = new YAPIContext();
-    if(await yctx.RegisterHubHttpCallback(message, response, errmsg) != YAPI.SUCCESS) {
-        console.log('HTTP callback error: '+errmsg);
-        response.write('Error: '+errmsg);
-        response.end();
-        yctx.FreeAPI();
-        return;
-    }
+//     let errmsg = new YErrorMsg();
+//     let yctx = new YAPIContext();
+//     if(await yctx.RegisterHubHttpCallback(message, response, errmsg) != YAPI.SUCCESS) {
+//         console.log('HTTP callback error: '+errmsg);
+//         response.write('Error: '+errmsg);
+//         response.end();
+//         yctx.FreeAPI();
+//         return;
+//     }
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.write('HTTP callback start<br>\n');
 
     // Display a list of modules on incoming hub to the Node.js console
-    await yctx.UpdateDeviceList(errmsg);
-    var module = YModule.FirstModuleInContext(yctx);
-    while(module) {
-        var msg = (await module.get_serialNumber()) + ' (' + (await module.get_productName()) + ')';
-        console.log(msg);
-        response.write(msg+'<br>\n');
-        module = module.nextModule();
-    }
-    let sensor = YSensor.FirstSensorInContext(yctx);
-    while(sensor) {
-        console.log('Sensor: ' + (await sensor.get_hardwareId()));
-        console.log('Vale: '+(await sensor.get_currentValue()));
-        // await sensor.set_reportFrequency("6/m");
-        // await sensor.registerTimedReportCallback(sensorCallback);
-        sensor = sensor.nextSensor();
-    }
-     let cell = YCellular.FirstCellularInContext(yctx);
-    while(cell)
-    {
-        console.log('Operator: '+(await cell.get_cellOperator()));
-        console.log('Details: '+(await cell.get_cellIdentifier()));
-        cell=cell.nextCellular();
-    }
-    yctx.FreeAPI();
+//     await yctx.UpdateDeviceList(errmsg);
+//     var module = YModule.FirstModuleInContext(yctx);
+//     while(module) {
+//         var msg = (await module.get_serialNumber()) + ' (' + (await module.get_productName()) + ')';
+//         console.log(msg);
+//         response.write(msg+'<br>\n');
+//         module = module.nextModule();
+//     }
+//     let sensor = YSensor.FirstSensorInContext(yctx);
+//     while(sensor) {
+//         console.log('Sensor: ' + (await sensor.get_hardwareId()));
+//         console.log('Vale: '+(await sensor.get_currentValue()));
+//         // await sensor.set_reportFrequency("6/m");
+//         // await sensor.registerTimedReportCallback(sensorCallback);
+//         sensor = sensor.nextSensor();
+//     }
+//      let cell = YCellular.FirstCellularInContext(yctx);
+//     while(cell)
+//     {
+//         console.log('Operator: '+(await cell.get_cellOperator()));
+//         console.log('Details: '+(await cell.get_cellIdentifier()));
+//         cell=cell.nextCellular();
+//     }
+//     yctx.FreeAPI();
 
     response.write('HTTP callback completed<br>\n');
     response.end();
